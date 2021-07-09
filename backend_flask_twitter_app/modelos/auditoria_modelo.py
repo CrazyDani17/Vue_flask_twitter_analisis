@@ -2,10 +2,10 @@ from conexion_base_de_datos.conexion import PostgresSQLPool #llamamos a la conex
 
 class AuditoriaModel:
     def __init__(self):        
-        self.cursor = PostgresSQLPool() #Inicializamos el cursor de la conexión necesario para ejecutar consultas sql.
+        self.pool = PostgresSQLPool() #Inicializamos el pool de la conexión necesario para ejecutar consultas sql.
 
     def get_auditorias(self):
-        rv = self.cursor.execute("SELECT * from auditorias")
+        rv = self.pool.execute("SELECT * from auditorias")
         data = []
         content = {}
         for result in rv: #Recorremos todos los elementos dentro del resultado obtenido de laa consulta

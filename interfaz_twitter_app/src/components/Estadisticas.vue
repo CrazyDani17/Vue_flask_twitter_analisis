@@ -14,7 +14,6 @@ export default{
             data:[{
               y: [],
               type:"box",
-              //name: "Depresivo",
               name: "Negativo",
               jitter: 0.3,
               pointpos: -1.8,
@@ -23,7 +22,6 @@ export default{
             {
               y: [],
               type:"box",
-              //name: "No depresivo",
               name: "Neutro",
               jitter: 0.3,
               pointpos: -1.8,
@@ -54,14 +52,26 @@ export default{
         filtrar(e) {
           this.show_loading = true
           e.preventDefault();
+          if(this.selected != null){
             this.$http.get ("http://192.168.0.120:5000/estadisticas/tema/" + this.selected)
                 .then(res => { 
-            this.data[0]["y"] = res.body["negativos"]
-            this.data[1]["y"] = res.body["neutros"]
-            this.data[2]["y"] = res.body["positivos"]
-            this.show_loading = false
-          }
-        );
+                  this.data[0]["y"] = res.body["negativos"]
+                  this.data[1]["y"] = res.body["neutros"]
+                  this.data[2]["y"] = res.body["positivos"]
+                  this.show_loading = false
+                }
+            );
+          } else {this.obtener_data_general()}
+        },
+        obtener_data_general(){
+          this.$http.get ('http://192.168.0.120:5000/estadisticas')
+            .then(res => {
+                this.data[0]["y"] = res.body["negativos"]
+                this.data[1]["y"] = res.body["neutros"]
+                this.data[2]["y"] = res.body["positivos"]
+                this.show_loading = false
+              }
+          );
         }
     },
     created(){// call when component is created
@@ -69,9 +79,7 @@ export default{
       this.$http.get ('http://192.168.0.120:5000/estadisticas/temas')
         .then(res => this.options = res.body);
       this.$http.get ('http://192.168.0.120:5000/estadisticas')
-        .then(res => { 
-            //this.data[1]["y"] = res.body["negativos"]
-            //this.data[0]["y"] = res.body["neutros"]
+        .then(res => {
             this.data[0]["y"] = res.body["negativos"]
             this.data[1]["y"] = res.body["neutros"]
             this.data[2]["y"] = res.body["positivos"]

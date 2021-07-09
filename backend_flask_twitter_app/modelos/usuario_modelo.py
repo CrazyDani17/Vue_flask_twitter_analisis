@@ -2,7 +2,7 @@ from conexion_base_de_datos.conexion import PostgresSQLPool
 
 class UserModel:
     def __init__(self):        
-        self.cursor = PostgresSQLPool()
+        self.pool = PostgresSQLPool()
 
     def user_login(self, user_name, password):
         params = {
@@ -10,7 +10,7 @@ class UserModel:
             'password' : password
         }
         query = """SELECT user_id from users where user_name = %(user_name)s and password = %(password)s"""
-        user_id = self.cursor.execute(query, params)
+        user_id = self.pool.execute(query, params)
         #Realizamos la verificación solo obteniendo un único dato de la consulta
         #Si en user_id está presente con los datos solicitados, entonces concede el acceso
         if user_id:
@@ -27,7 +27,7 @@ class UserModel:
 
     def get_user(self, id):
         params = {'id' : id}    
-        rv = self.cursor.execute("SELECT * from users where user_id=%(id)s", params)
+        rv = self.pool.execute("SELECT * from users where user_id=%(id)s", params)
         data = []
         content = {}
         for result in rv:
@@ -44,7 +44,7 @@ class UserModel:
         return data
 
     def get_users(self):
-        rv = self.cursor.execute("SELECT * from users")  
+        rv = self.pool.execute("SELECT * from users")  
         data = []
         content = {}
         for result in rv:
@@ -70,7 +70,7 @@ class UserModel:
         }
         query = """insert into users (user_name, password, nombre_completo, email, tipo_de_usuario) 
          values (%(user_name)s, %(password)s, %(nombre_completo)s, %(email)s, %(tipo_de_usuario)s) RETURNING user_id"""    
-        rv = self.cursor.execute(query, params, commit=True)
+        rv = self.pool.execute(query, params, commit=True)
         id_of_new_row = rv[0]
 
         data = {
@@ -86,7 +86,7 @@ class UserModel:
     def delete_user(self, id):
         params = {'id' : id}      
         query = """delete from users where user_id = %(id)s RETURNING user_id"""    
-        rv = self.cursor.execute(query, params, commit=True)
+        rv = self.pool.execute(query, params, commit=True)
 
         user_id = rv[0]
         if user_id:
@@ -111,7 +111,7 @@ class UserModel:
             'tipo_de_usuario' : tipo_de_usuario
         }
         query = """UPDATE users SET user_name = %(user_name)s, password = %(password)s, nombre_completo = %(nombre_completo)s, email = %(email)s, tipo_de_usuario = %(tipo_de_usuario)s WHERE user_id = %(user_id)s"""    
-        rv = self.cursor.execute(query, params, commit=True)
+        rv = self.pool.execute(query, params, commit=True)
         data = {
             'user_id': id,
             'user_name': params['user_name'],

@@ -2,10 +2,10 @@ from conexion_base_de_datos.conexion import PostgresSQLPool
 
 class EstadisticaModel:
     def __init__(self):
-        self.cursor = PostgresSQLPool()
+        self.pool = PostgresSQLPool()
 
     def get_temas(self):
-        rv = self.cursor.execute("SELECT tema from tweets")  
+        rv = self.pool.execute("SELECT tema from tweets")  
         content = {}
         temas = []
         data = [{
@@ -22,7 +22,7 @@ class EstadisticaModel:
                 data.append(content)
         return data
     def get_estadistica_general(self): #Para obtener los puntos a graficar en el boxplot inicial (general)
-        rv = self.cursor.execute("SELECT negativos, neutros, positivos from tweets")
+        rv = self.pool.execute("SELECT negativos, neutros, positivos from tweets")
         content = {}
         negativos = []
         neutros = []
@@ -50,24 +50,20 @@ class EstadisticaModel:
     
     def get_estadistica_por_tema(self, tema): #Obtener puntos del boxplot con filtro por tema
         params = {'tema' : tema}
-        rv = self.cursor.execute("""SELECT negativos, neutros, positivos from tweets where tema=%(tema)s""", params)
-        content = {}
+        rv = self.pool.execute("""SELECT negativos, neutros, positivos from tweets where tema=%(tema)s""", params)
         negativos = []
         neutros = []
         positivos = []
         for result in rv:
-            if result[0] != None:
-                for negativo in result[0]:
-                    if negativo > 0:
-                        negativos.append(negativo)
-            if result[1] != None:
-                for neutro in result [1]:
-                    if neutro > 0:
-                        neutros.append(neutro)
-            if result[2] != None:
-                for positivo in result [2]:
-                    if positivo > 0:
-                        positivos.append(positivo)
+            for negativo in result[0]:
+                if negativo > 0:
+                    negativos.append(negativo)
+            for neutro in result [1]:
+                if neutro > 0:
+                    neutros.append(neutro)
+            for positivo in result [2]:
+                if positivo > 0:
+                    positivos.append(positivo)
         content = {
                 'negativos' : negativos,
                 'neutros' : neutros,
