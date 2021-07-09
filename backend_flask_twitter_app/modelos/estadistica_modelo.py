@@ -1,12 +1,11 @@
-from conexion_base_de_datos.conexion import conn
+from conexion_base_de_datos.conexion import PostgresSQLPool
 
 class EstadisticaModel:
     def __init__(self):
-        self.cursor = conn.cursor()
+        self.cursor = PostgresSQLPool()
 
     def get_temas(self):
-        self.cursor.execute("SELECT tema from tweets")  
-        rv = self.cursor.fetchall()
+        rv = self.cursor.execute("SELECT tema from tweets")  
         content = {}
         temas = []
         data = [{
@@ -23,8 +22,7 @@ class EstadisticaModel:
                 data.append(content)
         return data
     def get_estadistica_general(self): #Para obtener los puntos a graficar en el boxplot inicial (general)
-        self.cursor.execute("SELECT negativos, neutros, positivos from tweets")
-        rv = self.cursor.fetchall()
+        rv = self.cursor.execute("SELECT negativos, neutros, positivos from tweets")
         content = {}
         negativos = []
         neutros = []
@@ -52,8 +50,7 @@ class EstadisticaModel:
     
     def get_estadistica_por_tema(self, tema): #Obtener puntos del boxplot con filtro por tema
         params = {'tema' : tema}
-        self.cursor.execute("""SELECT negativos, neutros, positivos from tweets where tema=%(tema)s""", params)
-        rv = self.cursor.fetchall()
+        rv = self.cursor.execute("""SELECT negativos, neutros, positivos from tweets where tema=%(tema)s""", params)
         content = {}
         negativos = []
         neutros = []

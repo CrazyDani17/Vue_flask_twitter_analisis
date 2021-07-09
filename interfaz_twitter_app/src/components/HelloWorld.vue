@@ -1,8 +1,8 @@
 <template>
   <div class="hello">
     <div align="justify">
-      <b-img align: center src="https://cdn.discordapp.com/attachments/823595523097100348/853765066277126164/loguito_final_sinfondo.png" width="250" height="250"></b-img>
       <SideBar/>
+      <b-img align: center src="https://cdn.discordapp.com/attachments/823595523097100348/853765066277126164/loguito_final_sinfondo.png" width="250" height="250"></b-img>
     </div>
     <h1>{{ msg }}</h1>
     <h4>Ingresa al menú principal</h4>
@@ -19,6 +19,11 @@ export default {
   data () {
     return {
       msg: 'Bienvenido'
+    }
+  },
+  created(){
+    if(this.$session.exists() == false){
+      this.$router.push('/user/login')
     }
   }
 }

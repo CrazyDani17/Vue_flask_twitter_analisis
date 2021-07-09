@@ -1,4 +1,4 @@
-from conexion_base_de_datos.conexion import conn
+from conexion_base_de_datos.conexion import PostgresSQLPool
 from tweepy_api.tweepy_api import api
 import tweepy #Incluimos la api de Tweepy para obtener los tweets de Twiiter.
 import nltk #Incluimos esta para la calificación de Tweets con NLP
@@ -8,7 +8,7 @@ from nltk import word_tokenize
 
 class TweetModel:
     def __init__(self):        
-        self.cursor = conn.cursor()
+        self.cursor = PostgresSQLPool()
 
     def search_tweet_by_topic(self, topic, user_id): #Busqueda de Tweets por tema gracias a tweeepy
         params = {
@@ -75,10 +75,8 @@ class TweetModel:
             }
             query = """insert into tweets (tweet, twitter_username, twitter_user_location,hashtags, user_id, negativo, neutro, positivo, negativos, neutros, positivos, puntaje, promedios, calificacion, tema) 
              values (%(tweet)s, %(twitter_username)s, %(twitter_user_location)s, %(hashtags)s, %(user_id)s, %(negativo)s, %(neutro)s, %(positivo)s, %(negativos)s, %(neutros)s, %(positivos)s, %(puntaje)s, %(promedios)s, %(calificacion)s, %(tema)s) RETURNING tweet_id"""
-            self.cursor.execute(query, query_params)
-            id_of_new_row = self.cursor.fetchone()[0] #id recibido de la consulta al realizar la inserción
-            conn.commit()
-
+            rv = self.cursor.execute(query, query_params, commit=True)
+            id_of_new_row =  rv[0]#id recibido de la consulta al realizar la inserción
             content = {
                 'tweet_id': id_of_new_row,
                 'tweet': query_params['tweet'],
@@ -104,8 +102,7 @@ class TweetModel:
 
     def get_tweet(self, id):
         params = {'id' : id}    
-        self.cursor.execute("SELECT * from tweets where tweet_id=%(id)s", params)                
-        rv = self.cursor.fetchall()
+        rv = self.cursor.execute("SELECT * from tweets where tweet_id=%(id)s", params)
         data = []
         content = {}
         for result in rv:
@@ -124,8 +121,7 @@ class TweetModel:
         return data
 
     def get_tweets(self):
-        self.cursor.execute("SELECT * from tweets")  
-        rv = self.cursor.fetchall()
+        rv = self.cursor.execute("SELECT * from tweets")
         data = []
         content = {}
         for result in rv:
@@ -151,9 +147,8 @@ class TweetModel:
         query = """insert into tweets (tweet, puntaje, calificacion, twitter_username,twitter_user_location,hashtags,user_id) 
          values (%(tweet)s, %(puntaje)s, %(calificacion)s, %(twitter_username)s, %(twitter_user_location)s
         , %(hashtags)s, %(user_id)s) RETURNING tweet_id"""    
-        cursor = self.cursor.execute(query, params)
-        id_of_new_row = self.cursor.fetchone()[0]
-        conn.commit()  
+        rv = self.cursor.execute(query, params, commit=True)
+        id_of_new_row = rv[0]
 
         data = {
             'tweet_id': id_of_new_row,
@@ -171,13 +166,12 @@ class TweetModel:
     def delete_tweet(self, id):
         params = {'id' : id}      
         query = """delete from tweets where tweet_id = %(id)s RETURNING tweet_id"""    
-        self.cursor.execute(query, params)
-        conn.commit()
+        rv = self.cursor.execute(query, params, commit=True)
 
-        tweet_id = self.cursor.fetchone()
+        tweet_id = rv[0]
         if tweet_id:
             data = {
-                'tweet_id': tweet_id[0],
+                'tweet_id': tweet_id,
                 'eliminado' : "True",
             }
         else:
@@ -199,8 +193,7 @@ class TweetModel:
             'user_id': user_id
         }
         query = """UPDATE tweets SET tweet = %(tweet)s, puntaje = %(puntaje)s, calificacion = %(calificacion)s, twitter_username = %(twitter_username)s, twitter_user_location = %(twitter_user_location)s, hashtags = %(hashtags)s, user_id = %(user_id)s WHERE tweet_id = %(tweet_id)s"""    
-        cursor = self.cursor.execute(query, params)
-        conn.commit()   
+        rv = self.cursor.execute(query, params, commit=True)
 
         data = {
             'tweet_id': id,

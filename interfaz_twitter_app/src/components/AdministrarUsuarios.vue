@@ -19,10 +19,8 @@ export default{
             //Splice es necesario para eliminarlo de la tabla dimámica de vue
             this.users.splice(this.users.indexOf(user),1);
             //llama al end-point para la eliminación del usuario desde el backend
-            this.$http.post ("http://192.168.0.120/delete_user/"+ user["user_id"])
-                .then(res => {
-                console.log(res.body);
-            });
+            this.$http.post ("http://192.168.0.120:5000/delete_user/"+ user["user_id"])
+                .then(res => { console.log(res.body);});
         }
     },
     created(){ // Este método es llamado cuando este es creado, por ello llamamos a  toda la data inicial
@@ -41,10 +39,17 @@ export default{
 <!--- La imagen del logo --->
 <b-img align: center src="https://cdn.discordapp.com/attachments/823595523097100348/853765066277126164/loguito_final_sinfondo.png" width="250" height="250"></b-img>
 <!--- Botón para dirigirte al fomulario agregar nuevo usuario --->
-<b-button pill variant="outline-primary" style="position: absolute;left:87%;top: 35%;" router-link to="crear_usuario">Añadir Usuario</b-button>    
+    
+
+<b-navbar type="light" variant="light">
+    <b-navbar-nav class="ml-auto">
+      <b-button pill variant="outline-primary" router-link to="crear_usuario">Añadir Usuario</b-button>
+    </b-navbar-nav>
+</b-navbar>
+
 <ul>
 <!--- Tabla que presenta todos los elementos (usuarios) de la base de datos --->
-<b-table striped hover :items="users" :fields="fields">
+<b-table responsive striped hover :items="users" :fields="fields">
     <!--- Por cada fila de usuario --->
     <template #cell(actions)="user">
         <div>

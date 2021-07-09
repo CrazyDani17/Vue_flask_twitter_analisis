@@ -14,6 +14,7 @@ export default{
             data:[{
               y: [],
               type:"box",
+              //name: "Depresivo",
               name: "Negativo",
               jitter: 0.3,
               pointpos: -1.8,
@@ -22,6 +23,7 @@ export default{
             {
               y: [],
               type:"box",
+              //name: "No depresivo",
               name: "Neutro",
               jitter: 0.3,
               pointpos: -1.8,
@@ -50,24 +52,30 @@ export default{
     },
     methods: {
         filtrar(e) {
+          this.show_loading = true
           e.preventDefault();
             this.$http.get ("http://192.168.0.120:5000/estadisticas/tema/" + this.selected)
                 .then(res => { 
             this.data[0]["y"] = res.body["negativos"]
             this.data[1]["y"] = res.body["neutros"]
             this.data[2]["y"] = res.body["positivos"]
+            this.show_loading = false
           }
         );
         }
     },
-    created(){ // call when component is created
+    created(){// call when component is created
+      this.show_loading = true 
       this.$http.get ('http://192.168.0.120:5000/estadisticas/temas')
         .then(res => this.options = res.body);
       this.$http.get ('http://192.168.0.120:5000/estadisticas')
         .then(res => { 
+            //this.data[1]["y"] = res.body["negativos"]
+            //this.data[0]["y"] = res.body["neutros"]
             this.data[0]["y"] = res.body["negativos"]
             this.data[1]["y"] = res.body["neutros"]
             this.data[2]["y"] = res.body["positivos"]
+            this.show_loading = false
           }
         );
     }
@@ -79,21 +87,25 @@ export default{
     <div align="justify">
       <SideBar/>
     </div>
-    <b-overlay :show="show_loading" rounded="sm" style="max-width: 320px; position: absolute;left:38%">
-        <b-card 
+    <b-overlay :show="show_loading" rounded="sm" style="max-width: 320px; position: absolute;
+        margin-top: 30px;
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;">
+    <b-card 
         header="Selecciona los filtros" :aria-hidden="show_loading ? 'true' : null" 
         border-variant="dark" 
         header-bg-variant="dark"
         header-border-variant="dark"
         header-text-variant="white"
-        align="center"
-        class="text-center">
+        align="center">
         <b-form @submit='filtrar'>
           <b-form-select v-model="selected" :options="options" size="sm" class="mt-3"></b-form-select>
           <b-button type="submit" variant="primary"> Filtrar </b-button>
         </b-form>
     </b-card>
-  </b-overlay>
-  <Plotly :data="data" :layout="layout" :display-mode-bar="false"></Plotly>
+    </b-overlay>
+    <Plotly :data="data" :layout="layout" :display-mode-bar="false"></Plotly>
   </div>
 </template>

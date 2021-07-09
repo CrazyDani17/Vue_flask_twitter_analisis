@@ -51,15 +51,31 @@ export default{
 
 <template>
 <div class='users'>
-<b-img align: center src="https://cdn.discordapp.com/attachments/823595523097100348/853765066277126164/loguito_final_sinfondo.png" width="250" height="250"></b-img>
 <div align="justify">
   <SideBar/>
 </div>
+<b-img align: center src="https://cdn.discordapp.com/attachments/823595523097100348/853765066277126164/loguito_final_sinfondo.png" width="250" height="250"></b-img>
+
     <h2>Crear Usuario</h2>
 
     <b-alert v-model="showDismissibleAlert" variant="success" dismissible>
       Felicidades creaste un nuevo usuario!
     </b-alert>
+
+    <b-card
+        align = "center"
+        header="Ingresa los datos correspondientes" :aria-hidden="show_loading ? 'true' : null" 
+        border-variant="dark" 
+        header-bg-variant="dark"
+        header-border-variant="dark"
+        header-text-variant="white"
+        rounded="sm"
+        style="max-width: 320px;
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;"
+        class="text-center">
 
     <b-form @submit='addUser' @reset="onReset" v-if="show">
         <b-form-input
@@ -100,5 +116,6 @@ export default{
       <b-button type="submit" variant="primary">Crear</b-button>
       <b-button type="reset" variant="danger">Limpiar</b-button>
     </b-form>
+    </b-card>
   </div>
 </template>

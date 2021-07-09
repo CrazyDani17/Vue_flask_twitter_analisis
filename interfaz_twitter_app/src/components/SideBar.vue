@@ -1,20 +1,29 @@
 <template>
   <div>
-    <b-button v-if="show_button" pill variant="outline-primary" style="position: absolute;left:3%;top: 5%;" v-b-toggle.sidebar-variant>Menú</b-button>
-    <b-dropdown  right v-if="show_button" pill variant="outline-primary" style="position: absolute;left:88%;top: 5%;">
-        <template #button-content>
+    <!---b-navbar toggleable="lg" type="dark" variant="info"--->
+    <b-navbar toggleable="lg" type="dark" variant="info">
+    <b-navbar-brand v-if="show_button" v-b-toggle.sidebar-variant>Menú</b-navbar-brand>
+    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+    <b-collapse id="nav-collapse" is-nav>
+    <b-navbar-nav class="ml-auto">
+    <b-nav-item-dropdown right>
+          <!-- Using 'button-content' slot -->
+          <template #button-content>
             <b-icon icon="file-person" aria-hidden="true"></b-icon> {{ msg }}
-        </template>
-        <b-dropdown-item-button>
+          </template>
+          <b-dropdown-item>
             <b-icon icon="pencil-square" aria-hidden="true"></b-icon>
             Mi perfil
-        </b-dropdown-item-button>
-        <b-dropdown-divider></b-dropdown-divider>
-        <b-dropdown-item-button variant="danger" @click="logout">
+        </b-dropdown-item>
+          <b-dropdown-item variant="danger" @click="logout">
             <b-icon icon="trash-fill" aria-hidden="true"></b-icon>
             Cerrar sesión
-        </b-dropdown-item-button>
-    </b-dropdown>
+        </b-dropdown-item>
+        </b-nav-item-dropdown>
+        </b-navbar-nav>
+    </b-collapse>
+
+    </b-navbar>
     <b-sidebar id="sidebar-variant" title="Menú" bg-variant="light" text-variant="blue" backdrop shadow width="auto">
       <template #default="{ hide }">
       <div class="px-3 py-2">

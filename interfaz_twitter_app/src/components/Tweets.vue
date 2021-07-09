@@ -34,13 +34,17 @@ export default{
 
 <template>
 <div class='tweets' align="justify">
-<b-img align: center src="https://cdn.discordapp.com/attachments/823595523097100348/853765066277126164/loguito_final_sinfondo.png" width="250" height="250"></b-img>
 <div align="justify">
     <SideBar/>
 </div>
-<b-button pill variant="outline-primary" style="position: absolute;left:91%;top: 35%;" router-link to="historial"> Historial </b-button>
+<b-img align: center src="https://cdn.discordapp.com/attachments/823595523097100348/853765066277126164/loguito_final_sinfondo.png" width="250" height="250"></b-img>
+<b-navbar type="light" variant="light">
+    <b-navbar-nav class="ml-auto">
+        <b-button pill variant="outline-primary" router-link to="historial"> Historial </b-button>
+</b-navbar-nav>
+</b-navbar>
 <ul>
-<b-table striped hover :items="tweets" :fields="fields">
+<b-table responsive striped hover :items="tweets" :fields="fields">
     <template #cell(actions)="tweet">
         <div>
         <b-button-group>

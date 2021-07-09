@@ -56,10 +56,10 @@ export default{
 
 <template>
 <div class='topics'>
-    <b-img align: center src="https://cdn.discordapp.com/attachments/823595523097100348/853765066277126164/loguito_final_sinfondo.png" width="250" height="250"></b-img>
     <div align="justify">
         <SideBar/>
     </div>
+    <b-img align: center src="https://cdn.discordapp.com/attachments/823595523097100348/853765066277126164/loguito_final_sinfondo.png" width="250" height="250"></b-img>
     <h2>Buscar tweets por tema:</h2>
 
     <b-alert
@@ -73,20 +73,22 @@ export default{
     </b-alert>
 
     <ul>
-        <b-table v-if="mostrar_data" striped hover :items="tweets" :fields="fields_tweets"></b-table>
+        <b-table v-if="mostrar_data" responsive striped hover :items="tweets" :fields="fields_tweets"></b-table>
     </ul>
 
-
-
-    
-    <b-overlay :show="show_loading" rounded="sm" style="max-width: 320px; position: absolute;left:38%;">
-        <b-card 
+        <b-card
+        align = "center"
         header="Ingresa un tema a buscar" :aria-hidden="show_loading ? 'true' : null" 
         border-variant="dark" 
         header-bg-variant="dark"
         header-border-variant="dark"
         header-text-variant="white"
-        align="center"
+        rounded="sm"
+        style="max-width: 320px;
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;"
         class="text-center">
             <b-form @submit='search' @reset="onReset" v-if="show">
                 <b-form-input
@@ -98,7 +100,7 @@ export default{
             <b-button type="submit" variant="primary" @click="show_loading = !show_loading"><b-icon icon="search" aria-hidden="true"></b-icon> Buscar</b-button>
             <b-button type="reset" variant="danger">Limpiar</b-button>
         </b-form>
-        </b-card>
-    </b-overlay>
+        <b-overlay :show="show_loading" no-wrap></b-overlay>
+        </b-card>  
   </div>
 </template>

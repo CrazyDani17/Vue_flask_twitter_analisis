@@ -29,7 +29,7 @@ export default{
 <b-img align: center src="https://cdn.discordapp.com/attachments/823595523097100348/853765066277126164/loguito_final_sinfondo.png" width="250" height="250"></b-img>
 <ul>
 <!--- Tabla que presenta todos los elementos (auditorias) de la base de datos --->
-<b-table striped hover :items="auditorias" :fields="fields">
+<b-table responsive striped hover :items="auditorias" :fields="fields">
 </b-table>
 </ul>
 </div>

@@ -33,7 +33,12 @@ export default {
         img-alt="Image"
         img-top
         tag="article"
-        style="max-width: 20rem; position: absolute;left:38%;top: 10%;"
+        style="max-width: 20rem; position: absolute;
+        margin-top: 30px;
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;"
         class="mb-2"
         align="center"
     >
